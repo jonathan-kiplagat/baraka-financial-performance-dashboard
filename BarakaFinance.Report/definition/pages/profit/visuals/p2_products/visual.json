@@ -3,10 +3,10 @@
   "name": "p2_products",
   "position": {
     "x": 630,
-    "y": 345,
+    "y": 310,
     "z": 8000,
     "width": 630,
-    "height": 355,
+    "height": 390,
     "tabOrder": 8000
   },
   "visual": {

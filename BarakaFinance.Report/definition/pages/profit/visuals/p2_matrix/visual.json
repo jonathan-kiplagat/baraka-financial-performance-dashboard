@@ -3,10 +3,10 @@
   "name": "p2_matrix",
   "position": {
     "x": 20,
-    "y": 345,
+    "y": 310,
     "z": 7000,
     "width": 600,
-    "height": 175,
+    "height": 180,
     "tabOrder": 7000
   },
   "visual": {

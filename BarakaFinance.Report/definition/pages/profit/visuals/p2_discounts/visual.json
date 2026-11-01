@@ -3,10 +3,10 @@
   "name": "p2_discounts",
   "position": {
     "x": 20,
-    "y": 530,
+    "y": 500,
     "z": 9000,
     "width": 600,
-    "height": 170,
+    "height": 200,
     "tabOrder": 9000
   },
   "visual": {
