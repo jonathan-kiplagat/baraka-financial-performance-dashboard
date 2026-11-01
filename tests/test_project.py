@@ -112,6 +112,9 @@ def test_measure_references_exist(model):
     for name, expr in measures.items():
         body = re.sub(r"--.*", "", expr)
         for ref in re.findall(r"(?<![\w'\]])\[([^\]]+)\]", body):
+            if ref.startswith("@"):  # temporary column added inside the measure
+                assert f'"{ref}"' in body, f"{name} uses [{ref}] without defining it"
+                continue
             assert ref in measures, f"{name} refers to unknown measure [{ref}]"
         for t, c in re.findall(r"'?([A-Za-z][\w ]*?)'?\[([^\]]+)\]", body):
             if t.strip() in tables:

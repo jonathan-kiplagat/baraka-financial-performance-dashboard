@@ -70,15 +70,15 @@ Values the report should show after **Refresh**, computed independently in panda
 
 ## Variance to Market Target % (segment plan allocated by prior-year share)
 
-| Market | 2024 | 2025 |
-|---|---|---|
-| Kigali | -17.1% | -14.3% |
-| Kampala | -1.7% | -0.4% |
-| Nairobi | -0.3% | -0.0% |
-| Mombasa | -1.8% | +0.4% |
-| Dar es Salaam | -0.6% | +0.7% |
-| Kisumu | -2.6% | +0.8% |
-| Nakuru | -2.4% | +1.2% |
+| Market | 2024 | 2025 | Total (2024–2025) |
+|---|---|---|---|
+| Kigali | -17.1% | -14.3% | -15.8% |
+| Kampala | -1.7% | -0.4% | -1.0% |
+| Nairobi | -0.3% | -0.0% | -0.2% |
+| Mombasa | -1.8% | +0.4% | -0.7% |
+| Dar es Salaam | -0.6% | +0.7% | +0.1% |
+| Kisumu | -2.6% | +0.8% | -0.9% |
+| Nakuru | -2.4% | +1.2% | -0.5% |
 
 ## Strongest and weakest months (Total Sales)
 

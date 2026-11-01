@@ -148,11 +148,20 @@ table 'Key Measures'
 		displayFolder: 4 Plan
 		lineageTag: 4984cd31-c46c-5201-85e5-0a9cfe90232d
 
-	/// Total Sales versus the market-allocated target.
+	/// Total Sales versus the market-allocated target, over months that have a target.
 	measure 'Variance to Market Target %' =
-			VAR Plan = [Target Sales (Market)]
+			-- Compare sales only in segment-months that have an allocated target (2024 on),
+			-- so totals across years do not count 2023 sales against no plan.
+			VAR Months =
+				ADDCOLUMNS (
+					CROSSJOIN ( VALUES ( Segment[Segment] ), VALUES ( 'Date'[Month Start] ) ),
+					"@Plan", [Target Sales (Market)],
+					"@Sales", [Total Sales]
+				)
+			VAR Plan = SUMX ( Months, [@Plan] )
+			VAR SalesInPlan = SUMX ( FILTER ( Months, NOT ISBLANK ( [@Plan] ) ), [@Sales] )
 			RETURN
-				IF ( NOT ISBLANK ( Plan ), DIVIDE ( [Total Sales] - Plan, Plan ) )
+				IF ( NOT ISBLANK ( Plan ), DIVIDE ( SalesInPlan - Plan, Plan ) )
 		formatString: 0.0%
 		displayFolder: 4 Plan
 		lineageTag: 5cd5f32a-50b9-505e-ad42-4768622793ef

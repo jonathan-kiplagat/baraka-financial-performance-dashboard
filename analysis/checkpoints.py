@@ -83,6 +83,7 @@ def market_target(sales: pd.DataFrame, targets: pd.DataFrame) -> pd.DataFrame:
     year = alloc.index.get_level_values(0).year
     target_y = alloc.groupby(year).sum().T
     actual_y = actual.groupby(year).sum().T
+    target_y["Total"], actual_y["Total"] = target_y.sum(axis=1), actual_y.sum(axis=1)
     return (actual_y - target_y) / target_y
 
 
@@ -137,9 +138,9 @@ def main() -> str:
 
     mv = market_target(s, t)
     lines += ["", "## Variance to Market Target % (segment plan allocated by prior-year share)", "",
-              "| Market | 2024 | 2025 |", "|---|---|---|"]
+              "| Market | 2024 | 2025 | Total (2024–2025) |", "|---|---|---|---|"]
     for k, r in mv.sort_values(2025).iterrows():
-        lines.append(f"| {k} | {r[2024]:+.1%} | {r[2025]:+.1%} |")
+        lines.append(f"| {k} | {r[2024]:+.1%} | {r[2025]:+.1%} | {r['Total']:+.1%} |")
 
     mm = s.groupby(["year", s["month"].dt.month])["sales_kes"].sum()
     lines += ["", "## Strongest and weakest months (Total Sales)", "", "| Year | Strongest | Weakest |", "|---|---|---|"]
