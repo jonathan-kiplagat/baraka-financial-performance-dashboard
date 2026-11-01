@@ -30,6 +30,12 @@ The project is saved in Power BI's text-based **PBIP** format, so every table, r
 
 > If Power BI says the project uses preview features, enable **File → Options and settings → Options → Preview features → Power BI Project (.pbip) save option** and **Store reports using enhanced metadata format (PBIR)**, then reopen.
 
+## Report pages at a glance
+
+| Overview | Profit drivers | Markets and plan |
+|---|---|---|
+| ![Overview](screenshots/01-overview.png) | ![Profit drivers](screenshots/02-profit-drivers.png) | ![Markets and plan](screenshots/03-markets-and-plan.png) |
+
 ## The model
 
 ```mermaid

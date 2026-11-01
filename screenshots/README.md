@@ -1,6 +1,6 @@
 # Screenshots
 
-After opening the report in Power BI Desktop and refreshing, save one screenshot per page here (the submission asks for a screenshot of each page):
+One screenshot per report page, taken in Power BI Desktop after refreshing:
 
 - `01-overview.png`
 - `02-profit-drivers.png`
