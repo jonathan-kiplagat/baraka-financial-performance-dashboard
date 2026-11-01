@@ -1,0 +1,45 @@
+table Targets
+	lineageTag: 78fa460d-a932-553d-8dd7-2b43cb19bbed
+
+	column month
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		isHidden
+		lineageTag: d647b8c4-cbd3-5de0-94ac-0fabb67cbb33
+		summarizeBy: none
+		sourceColumn: month
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column segment
+		dataType: string
+		isHidden
+		lineageTag: 861c7847-03d9-5b75-b794-a7e0be4ae9fc
+		summarizeBy: none
+		sourceColumn: segment
+
+		annotation SummarizationSetBy = Automatic
+
+	column target_sales_kes
+		dataType: int64
+		formatString: #,0
+		isHidden
+		lineageTag: 0058689f-e384-595d-984d-38aa0272b216
+		summarizeBy: sum
+		sourceColumn: target_sales_kes
+
+		annotation SummarizationSetBy = Automatic
+
+
+	partition Targets = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents(DataFolder & "baraka-targets.csv"), [Delimiter = ",", Columns = 3, Encoding = 65001, QuoteStyle = QuoteStyle.None]),
+					#"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+					#"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers", {{"month", type date}, {"segment", type text}, {"target_sales_kes", Int64.Type}}, "en-US")
+				in
+					#"Changed Type"
+

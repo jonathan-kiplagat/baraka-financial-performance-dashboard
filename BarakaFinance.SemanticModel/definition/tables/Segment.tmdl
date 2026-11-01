@@ -1,0 +1,23 @@
+table Segment
+	lineageTag: c6b8ad2d-b21c-50b7-8604-78eee4258552
+
+	column Segment
+		dataType: string
+		lineageTag: 085121b8-1d66-53e8-9e49-999093375344
+		summarizeBy: none
+		sourceColumn: Segment
+
+		annotation SummarizationSetBy = Automatic
+
+
+	partition Segment = m
+		mode: import
+		source =
+				let
+					Source = Targets,
+					Segments = Table.Distinct(Table.SelectColumns(Source, {"segment"})),
+					Renamed = Table.RenameColumns(Segments, {{"segment", "Segment"}}),
+					Sorted = Table.Sort(Renamed, {{"Segment", Order.Ascending}})
+				in
+					Sorted
+

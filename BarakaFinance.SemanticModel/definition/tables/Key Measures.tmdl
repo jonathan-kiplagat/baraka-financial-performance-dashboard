@@ -1,0 +1,174 @@
+table 'Key Measures'
+	lineageTag: 35adea58-cdec-5766-930f-a90a699a29a8
+
+	/// What customers paid after discounts (KES).
+	measure 'Total Sales' = SUM ( Sales[sales_kes] )
+		formatString: #,0
+		displayFolder: 1 Sales & profit
+		lineageTag: 0a56074d-7949-544a-b8a0-311c86d1a149
+
+	/// Units x sale price, before discounts (KES).
+	measure 'Gross Sales' = SUM ( Sales[gross_sales_kes] )
+		formatString: #,0
+		displayFolder: 1 Sales & profit
+		lineageTag: 780864d6-416d-5f33-b65a-8460dfd63881
+
+	/// Value of discounts given (KES).
+	measure 'Total Discounts' = SUM ( Sales[discounts_kes] )
+		formatString: #,0
+		displayFolder: 2 Discounts
+		lineageTag: c7a79a24-34e7-5c0d-8142-6ea18e95c240
+
+	/// Discounts as a share of gross sales.
+	measure 'Discount %' = DIVIDE ( [Total Discounts], [Gross Sales] )
+		formatString: 0.0%
+		displayFolder: 2 Discounts
+		lineageTag: f1f66a9b-5410-5e2a-9869-9a13c769bb27
+
+	/// This item's discounts as a share of all discounts in the current selection.
+	measure 'Share of All Discounts' = DIVIDE ( [Total Discounts], CALCULATE ( [Total Discounts], ALLSELECTED () ) )
+		formatString: 0.0%
+		displayFolder: 2 Discounts
+		lineageTag: 8193b554-28c7-51c3-9e3c-2fdd4045efb5
+
+	/// Cost of goods sold (KES).
+	measure 'Total COGS' = SUM ( Sales[cogs_kes] )
+		formatString: #,0
+		displayFolder: 1 Sales & profit
+		lineageTag: 23fb503e-6e0a-5942-9af7-3c29b05b43ed
+
+	/// Sales minus COGS (KES).
+	measure 'Total Profit' = SUM ( Sales[profit_kes] )
+		formatString: #,0
+		displayFolder: 1 Sales & profit
+		lineageTag: bd5e92f5-8f66-5121-b85f-5559dd77e6b0
+
+	/// Profit as a share of sales.
+	measure 'Profit Margin' = DIVIDE ( [Total Profit], [Total Sales] )
+		formatString: 0.0%
+		displayFolder: 1 Sales & profit
+		lineageTag: 8030c2a5-925b-525e-afee-7fc431231e95
+
+	/// Units sold.
+	measure 'Units Sold' = SUM ( Sales[units_sold] )
+		formatString: #,0
+		displayFolder: 1 Sales & profit
+		lineageTag: c67b2f19-e134-5722-84fa-8145cabddde7
+
+	/// Total Sales for the same period one year earlier.
+	measure 'Sales Last Year' = CALCULATE ( [Total Sales], SAMEPERIODLASTYEAR ( 'Date'[Date] ) )
+		formatString: #,0
+		displayFolder: 3 Time intelligence
+		lineageTag: 44cc595f-c098-559e-a1c7-f7a5de1e4b70
+
+	/// Change in Total Sales versus the same period last year (within a single year).
+	measure 'Sales Growth %' =
+			-- Only meaningful within one year: across several years the comparison overlaps.
+			VAR SalesLY = [Sales Last Year]
+			RETURN
+				IF (
+					HASONEVALUE ( 'Date'[Year] ) && NOT ISBLANK ( SalesLY ),
+					DIVIDE ( [Total Sales] - SalesLY, SalesLY )
+				)
+		formatString: 0.0%
+		displayFolder: 3 Time intelligence
+		lineageTag: 83795248-0d12-5546-b805-49e208009bce
+
+	/// Total Profit for the same period one year earlier.
+	measure 'Profit Last Year' = CALCULATE ( [Total Profit], SAMEPERIODLASTYEAR ( 'Date'[Date] ) )
+		formatString: #,0
+		displayFolder: 3 Time intelligence
+		lineageTag: 7ae8e013-edbe-5a96-a236-f22241dbf560
+
+	/// Total Sales from 1 January to the end of the current period.
+	measure 'Sales YTD' = TOTALYTD ( [Total Sales], 'Date'[Date] )
+		formatString: #,0
+		displayFolder: 3 Time intelligence
+		lineageTag: b944c915-3cfe-5f39-85ff-ffd763b0e7d1
+
+	/// Change versus calendar 2023 (use with a single year selected).
+	measure 'Sales vs 2023 %' =
+			VAR Base2023 =
+				CALCULATE ( [Total Sales], REMOVEFILTERS ( 'Date' ), 'Date'[Year] = 2023 )
+			RETURN
+				IF ( HASONEVALUE ( 'Date'[Year] ), DIVIDE ( [Total Sales] - Base2023, Base2023 ) )
+		formatString: 0.0%
+		displayFolder: 3 Time intelligence
+		lineageTag: d92f51d6-090a-5089-b1ab-7ff8d465b12f
+
+	/// Planned sales from the monthly sales plan (KES). Blank when a market, product or discount band is filtered.
+	measure 'Target Sales' =
+			-- The plan is set by segment and month only, so it is not defined for a
+			-- market, product or discount band. Return blank rather than a misleading total.
+			IF (
+				ISCROSSFILTERED ( Markets ) || ISCROSSFILTERED ( Products ) || ISCROSSFILTERED ( 'Discount Band' ),
+				BLANK (),
+				SUM ( Targets[target_sales_kes] )
+			)
+		formatString: #,0
+		displayFolder: 4 Plan
+		lineageTag: fc7bdf69-d046-5111-9109-c8eff3a968cd
+
+	/// Total Sales minus Target Sales (KES). Positive means ahead of plan.
+	measure 'Variance to Target' =
+			VAR Plan = [Target Sales]
+			RETURN
+				IF ( NOT ISBLANK ( Plan ), [Total Sales] - Plan )
+		formatString: #,0
+		displayFolder: 4 Plan
+		lineageTag: 3f518df9-5616-5ea7-8c51-aaeaeab40f4e
+
+	/// Variance to Target as a share of Target Sales.
+	measure 'Variance to Target %' = DIVIDE ( [Variance to Target], [Target Sales] )
+		formatString: 0.0%
+		displayFolder: 4 Plan
+		lineageTag: a079dc2a-0aa4-5951-a9f4-d66b883fecaa
+
+	/// Segment target allocated to markets by prior-year share of segment sales (from 2024).
+	measure 'Target Sales (Market)' =
+			-- The plan is set by segment and month. Allocate each segment-month target to
+			-- markets by the market's share of that segment's sales a year earlier.
+			SUMX (
+				CROSSJOIN ( VALUES ( Segment[Segment] ), VALUES ( 'Date'[Month Start] ) ),
+				VAR MonthLY = EDATE ( 'Date'[Month Start], -12 )
+				VAR SegmentTarget = CALCULATE ( SUM ( Targets[target_sales_kes] ) )
+				VAR MarketSalesLY =
+					CALCULATE ( [Total Sales], REMOVEFILTERS ( 'Date' ), 'Date'[Month Start] = MonthLY )
+				VAR SegmentSalesLY =
+					CALCULATE (
+						[Total Sales],
+						REMOVEFILTERS ( 'Date' ),
+						'Date'[Month Start] = MonthLY,
+						REMOVEFILTERS ( Markets )
+					)
+				RETURN
+					SegmentTarget * DIVIDE ( MarketSalesLY, SegmentSalesLY )
+			)
+		formatString: #,0
+		displayFolder: 4 Plan
+		lineageTag: 4984cd31-c46c-5201-85e5-0a9cfe90232d
+
+	/// Total Sales versus the market-allocated target.
+	measure 'Variance to Market Target %' =
+			VAR Plan = [Target Sales (Market)]
+			RETURN
+				IF ( NOT ISBLANK ( Plan ), DIVIDE ( [Total Sales] - Plan, Plan ) )
+		formatString: 0.0%
+		displayFolder: 4 Plan
+		lineageTag: 5cd5f32a-50b9-505e-ad42-4768622793ef
+
+	column Value
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: b847b3c4-db10-52f5-8251-c010c2e6bd44
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Value]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Key Measures' = calculated
+		mode: import
+		source = ROW ( "Value", 0 )
+

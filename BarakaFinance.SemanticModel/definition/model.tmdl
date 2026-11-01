@@ -1,0 +1,21 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	discourageImplicitMeasures
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+	annotation PBI_QueryOrder = ["DataFolder","Sales","Targets","Products","Markets","Segment","Discount Band"]
+
+	annotation __PBI_TimeIntelligenceEnabled = 0
+
+ref table Sales
+ref table Targets
+ref table Products
+ref table Markets
+ref table Segment
+ref table 'Discount Band'
+ref table Date
+ref table 'Key Measures'

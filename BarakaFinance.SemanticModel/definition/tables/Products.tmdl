@@ -1,0 +1,65 @@
+table Products
+	lineageTag: 631e5f2e-1f49-5216-8b30-89107b9833af
+
+	column product
+		dataType: string
+		lineageTag: 9ab80f16-301e-5748-a5e0-8e06c02f075f
+		summarizeBy: none
+		sourceColumn: product
+
+		annotation SummarizationSetBy = Automatic
+
+	column category
+		dataType: string
+		lineageTag: 57677609-7f31-5c9a-94ef-e0408f03fdfe
+		summarizeBy: none
+		sourceColumn: category
+
+		annotation SummarizationSetBy = Automatic
+
+	column pack_size
+		dataType: string
+		lineageTag: 6888d18e-6377-53ca-97a2-4abdb9d88dd1
+		summarizeBy: none
+		sourceColumn: pack_size
+
+		annotation SummarizationSetBy = Automatic
+
+	column standard_cost_kes
+		dataType: int64
+		formatString: #,0
+		lineageTag: 4e8976b3-58f6-594b-b9b6-9e5c5aabd767
+		summarizeBy: none
+		sourceColumn: standard_cost_kes
+
+		annotation SummarizationSetBy = Automatic
+
+	column list_price_kes
+		dataType: int64
+		formatString: #,0
+		lineageTag: d55a1ccd-c902-59ea-9fa2-29b9ed4a8fc6
+		summarizeBy: none
+		sourceColumn: list_price_kes
+
+		annotation SummarizationSetBy = Automatic
+
+	column launched
+		dataType: int64
+		formatString: 0
+		lineageTag: d5d2a725-d426-5b14-be46-86b6a5f1c134
+		summarizeBy: none
+		sourceColumn: launched
+
+		annotation SummarizationSetBy = Automatic
+
+
+	partition Products = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents(DataFolder & "baraka-products.csv"), [Delimiter = ",", Columns = 6, Encoding = 65001, QuoteStyle = QuoteStyle.None]),
+					#"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+					#"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers", {{"product", type text}, {"category", type text}, {"pack_size", type text}, {"standard_cost_kes", Int64.Type}, {"list_price_kes", Int64.Type}, {"launched", Int64.Type}}, "en-US")
+				in
+					#"Changed Type"
+

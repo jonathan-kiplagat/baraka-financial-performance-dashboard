@@ -1,0 +1,19 @@
+# Power BI project: local settings and data cache (recreated on refresh)
+**/.pbi/localSettings.json
+**/.pbi/cache.abf
+**/.pbi/unappliedChanges.json
+
+# Saved report file: kept out of git by default because it embeds a copy of the data.
+# Remove this line if you want to commit the .pbix you submit.
+*.pbix
+
+# Python
+__pycache__/
+.pytest_cache/
+.venv/
+
+# Editors and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

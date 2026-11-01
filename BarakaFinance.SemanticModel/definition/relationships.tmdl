@@ -1,0 +1,28 @@
+relationship f40977b0-0cba-5c6c-acda-f98b1e859783
+	fromColumn: Sales.month
+	toColumn: Date.Date
+
+relationship 42cb9811-979c-53c5-9118-c78812b9ebf6
+	fromColumn: Targets.month
+	toColumn: Date.Date
+
+relationship 4359c6a3-6748-51a9-9345-1cad3cd5c8a8
+	fromColumn: Sales.segment
+	toColumn: Segment.Segment
+
+relationship 4e88af46-4792-56fd-ac93-7c0912a48409
+	fromColumn: Targets.segment
+	toColumn: Segment.Segment
+
+relationship 09e261aa-d4e9-5b30-8b47-bbbc9b1352d9
+	fromColumn: Sales.product
+	toColumn: Products.product
+
+relationship 08a4b729-40eb-5d0e-bb18-3ecb6d6d4fbe
+	fromColumn: Sales.market
+	toColumn: Markets.market
+
+relationship 0aa1e292-a47c-5096-978e-7e48006b14d8
+	fromColumn: Sales.discount_band
+	toColumn: 'Discount Band'.'Discount Band'
+

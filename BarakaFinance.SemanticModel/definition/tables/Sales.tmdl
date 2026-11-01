@@ -1,0 +1,142 @@
+table Sales
+	lineageTag: cab79c06-d8c2-5050-bf0e-28f4963b0af9
+
+	column sale_id
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: a7669c3e-5d2b-5f3a-aa25-54496dd7b857
+		summarizeBy: none
+		sourceColumn: sale_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column month
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		isHidden
+		lineageTag: 0fa71a54-05dd-54cf-b85f-f8c3ec335b94
+		summarizeBy: none
+		sourceColumn: month
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column segment
+		dataType: string
+		isHidden
+		lineageTag: a011dd20-ead5-5e05-9935-b36839850da8
+		summarizeBy: none
+		sourceColumn: segment
+
+		annotation SummarizationSetBy = Automatic
+
+	column market
+		dataType: string
+		isHidden
+		lineageTag: 666e8bbc-5693-5df3-ad48-7c3bf4ea2fd8
+		summarizeBy: none
+		sourceColumn: market
+
+		annotation SummarizationSetBy = Automatic
+
+	column product
+		dataType: string
+		isHidden
+		lineageTag: 92ce8042-63b4-5d73-b27e-f39f35400bb4
+		summarizeBy: none
+		sourceColumn: product
+
+		annotation SummarizationSetBy = Automatic
+
+	column discount_band
+		dataType: string
+		isHidden
+		lineageTag: 6deee2f4-ced1-5568-aa33-64a89fa82b65
+		summarizeBy: none
+		sourceColumn: discount_band
+
+		annotation SummarizationSetBy = Automatic
+
+	column units_sold
+		dataType: int64
+		formatString: #,0
+		isHidden
+		lineageTag: 21e27515-c320-5fc4-9818-47d32d5ba4b4
+		summarizeBy: sum
+		sourceColumn: units_sold
+
+		annotation SummarizationSetBy = Automatic
+
+	column sale_price_kes
+		dataType: int64
+		formatString: #,0
+		isHidden
+		lineageTag: f8e82137-b470-53a5-9ca0-b1c6416be03a
+		summarizeBy: sum
+		sourceColumn: sale_price_kes
+
+		annotation SummarizationSetBy = Automatic
+
+	column gross_sales_kes
+		dataType: int64
+		formatString: #,0
+		isHidden
+		lineageTag: 66d58146-e1a6-5e18-b9ec-c8ddaeb0e17f
+		summarizeBy: sum
+		sourceColumn: gross_sales_kes
+
+		annotation SummarizationSetBy = Automatic
+
+	column discounts_kes
+		dataType: int64
+		formatString: #,0
+		isHidden
+		lineageTag: 8ede28fa-f906-5a43-8502-665df74bca47
+		summarizeBy: sum
+		sourceColumn: discounts_kes
+
+		annotation SummarizationSetBy = Automatic
+
+	column sales_kes
+		dataType: int64
+		formatString: #,0
+		isHidden
+		lineageTag: e02b7987-7cd2-54f7-8efa-e340bfa3e9d5
+		summarizeBy: sum
+		sourceColumn: sales_kes
+
+		annotation SummarizationSetBy = Automatic
+
+	column cogs_kes
+		dataType: int64
+		formatString: #,0
+		isHidden
+		lineageTag: f6da8276-99a0-5de7-a565-41690c70fafb
+		summarizeBy: sum
+		sourceColumn: cogs_kes
+
+		annotation SummarizationSetBy = Automatic
+
+	column profit_kes
+		dataType: int64
+		formatString: #,0
+		isHidden
+		lineageTag: 74523f64-d9f6-594e-a97a-9bfd98cc23a7
+		summarizeBy: sum
+		sourceColumn: profit_kes
+
+		annotation SummarizationSetBy = Automatic
+
+
+	partition Sales = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents(DataFolder & "baraka-sales.csv"), [Delimiter = ",", Columns = 13, Encoding = 65001, QuoteStyle = QuoteStyle.None]),
+					#"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+					#"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers", {{"sale_id", Int64.Type}, {"month", type date}, {"segment", type text}, {"market", type text}, {"product", type text}, {"discount_band", type text}, {"units_sold", Int64.Type}, {"sale_price_kes", Int64.Type}, {"gross_sales_kes", Int64.Type}, {"discounts_kes", Int64.Type}, {"sales_kes", Int64.Type}, {"cogs_kes", Int64.Type}, {"profit_kes", Int64.Type}}, "en-US")
+				in
+					#"Changed Type"
+

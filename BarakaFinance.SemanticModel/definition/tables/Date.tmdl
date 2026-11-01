@@ -1,0 +1,88 @@
+table Date
+	dataCategory: Time
+	lineageTag: ac1c2782-bf30-5836-ad8d-67fe959bc8e4
+
+	column Date
+		dataType: dateTime
+		isKey
+		formatString: yyyy-mm-dd
+		lineageTag: f21dd371-d291-5f47-8e28-125e9c8afb38
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: f853c56f-2213-58a6-8333-ba36e6caedeb
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Year]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quarter
+		dataType: string
+		lineageTag: de8f063f-989e-5e73-9437-dbd056c2fc17
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Quarter]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Number'
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 0887c366-c76c-5945-b2b3-85cbc3d22852
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month Number]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Month
+		dataType: string
+		lineageTag: 0ed4dec1-ed28-5fe7-ba5a-54ac11a97bf9
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month]
+		sortByColumn: 'Month Number'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Start'
+		dataType: dateTime
+		formatString: mmm yyyy
+		lineageTag: a46ff56e-4223-55b2-9c69-05c0ad8aa451
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month Start]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Year Month'
+		dataType: string
+		lineageTag: 8c56baeb-66fb-5467-a4ff-2d66430c4c61
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Year Month]
+
+		annotation SummarizationSetBy = Automatic
+
+
+	partition Date = calculated
+		mode: import
+		source =
+				ADDCOLUMNS (
+					CALENDAR ( DATE ( 2023, 1, 1 ), DATE ( 2025, 12, 31 ) ),
+					"Year", YEAR ( [Date] ),
+					"Quarter", "Q" & QUARTER ( [Date] ),
+					"Month Number", MONTH ( [Date] ),
+					"Month", FORMAT ( [Date], "mmm" ),
+					"Month Start", DATE ( YEAR ( [Date] ), MONTH ( [Date] ), 1 ),
+					"Year Month", FORMAT ( [Date], "yyyy-mm" )
+				)
+

@@ -1,0 +1,43 @@
+table 'Discount Band'
+	lineageTag: 23a9d766-f254-5011-bb17-2c37e5a10e8c
+
+	column 'Discount Band'
+		dataType: string
+		lineageTag: 11ad962a-8d20-5fc9-bedf-48270ce0f5f9
+		summarizeBy: none
+		sourceColumn: Discount Band
+		sortByColumn: 'Band Order'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Discount Rate'
+		dataType: double
+		formatString: 0%
+		lineageTag: 0795bd5e-e912-58cb-bb10-0793002deb43
+		summarizeBy: none
+		sourceColumn: Discount Rate
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Band Order'
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 11551bd9-b8ff-5788-a31c-0698743aff4d
+		summarizeBy: none
+		sourceColumn: Band Order
+
+		annotation SummarizationSetBy = Automatic
+
+
+	partition 'Discount Band' = m
+		mode: import
+		source =
+				let
+					Source = #table(
+						type table [#"Discount Band" = text, #"Discount Rate" = number, #"Band Order" = Int64.Type],
+						{{"None", 0, 1}, {"Low", 0.03, 2}, {"Medium", 0.07, 3}, {"High", 0.15, 4}}
+					)
+				in
+					Source
+

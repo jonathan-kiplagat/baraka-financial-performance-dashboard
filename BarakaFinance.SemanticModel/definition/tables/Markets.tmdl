@@ -1,0 +1,46 @@
+table Markets
+	lineageTag: c1c2f34d-103b-5fac-9c2c-a50cfbdd6f65
+
+	column market
+		dataType: string
+		lineageTag: 2300d367-01ab-5891-861a-8ebf2bcab1d9
+		summarizeBy: none
+		sourceColumn: market
+
+		annotation SummarizationSetBy = Automatic
+
+	column country
+		dataType: string
+		lineageTag: 555a4fcc-27a0-5f9e-8c4d-290d825e9baf
+		summarizeBy: none
+		sourceColumn: country
+
+		annotation SummarizationSetBy = Automatic
+
+	column region
+		dataType: string
+		lineageTag: ce1d96cf-1fe6-530c-a8a3-d8d01ce1628d
+		summarizeBy: none
+		sourceColumn: region
+
+		annotation SummarizationSetBy = Automatic
+
+	column market_type
+		dataType: string
+		lineageTag: 02f7e371-9424-53ca-b6eb-9574b761ce50
+		summarizeBy: none
+		sourceColumn: market_type
+
+		annotation SummarizationSetBy = Automatic
+
+
+	partition Markets = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents(DataFolder & "baraka-markets.csv"), [Delimiter = ",", Columns = 4, Encoding = 65001, QuoteStyle = QuoteStyle.None]),
+					#"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+					#"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers", {{"market", type text}, {"country", type text}, {"region", type text}, {"market_type", type text}}, "en-US")
+				in
+					#"Changed Type"
+
